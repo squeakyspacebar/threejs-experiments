@@ -168,7 +168,7 @@ function main() {
   camera.position.z = 4;
 
   // Refine icosahedron.
-  let level = 4;
+  let level = 0;
   for (let i = 0; i < level; i++) {
     poly = refineIcosahedron(poly);
   }
