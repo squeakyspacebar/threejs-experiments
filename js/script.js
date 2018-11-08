@@ -1,14 +1,17 @@
-function generateCube() {
-  let geometry = new THREE.BoxGeometry(1, 1, 1);
-  let material = new THREE.MeshBasicMaterial( { color: 0x0000ff });
+'use strict';
+
+function generatePolyhedron(vertices, faces, material) {
+  let geometry = new THREE.Geometry();
+
+  geometry.vertices = vertices;
+  geometry.faces = faces;
+
   let mesh = new THREE.Mesh(geometry, material);
 
   return mesh;
 }
 
 function generateIcosahedron() {
-  let geometry = new THREE.Geometry();
-
   // Calculate the golden ratio.
   let p = (1.0 + Math.sqrt(5.0)) / 2.0;
 
@@ -59,19 +62,13 @@ function generateIcosahedron() {
     new THREE.Face3( 6,  5, 10),
   ];
 
-  // A regular icosahedron can be generated via three orthogonal rectangles
-  // where the side lengths of each rectangle conform to the golden ratio.
-  // The vertices are labeled for ease of creating faces.
-  geometry.vertices = vertices;
-  geometry.faces = faces;
-
   let material = new THREE.MeshBasicMaterial({ color: 0xee00ee });
-  let mesh = new THREE.Mesh(geometry, material);
+  let mesh = generatePolyhedron(vertices, faces, material);
 
   return mesh;
 }
 
-function refineIcosahedron(mesh) {
+function refinePolyhedron(mesh) {
   // Initialize array to hold new subdivided faces.
   let updatedFaces = [];
 
@@ -102,9 +99,9 @@ function subdivideFace(face, mesh) {
   let v3 = mesh.geometry.vertices[face.c];
 
   // Add midpoints of each edge to the mesh.
-  let mid1 = addMidpoint(v1, v2, mesh);
-  let mid2 = addMidpoint(v2, v3, mesh);
-  let mid3 = addMidpoint(v3, v1, mesh);
+  let mid1 = addMidpointToMesh(v1, v2, mesh);
+  let mid2 = addMidpointToMesh(v2, v3, mesh);
+  let mid3 = addMidpointToMesh(v3, v1, mesh);
 
   // Create new faces with the new vertices.
   let newFaces = [
@@ -125,11 +122,11 @@ function getMidpoint(v1, v2) {
   );
 }
 
-function addMidpoint(v1, v2, mesh) {
+function addMidpointToMesh(v1, v2, mesh, circumRadius = 1.0) {
   let midpoint = getMidpoint(v1, v2);
 
   // Calculate factor to scale new vertex to desired spherical radius.
-  let scalingFactor = v1.length() / midpoint.length();
+  let scalingFactor = circumRadius / midpoint.length();
 
   // Create a scaled midpoint vector.
   let scaledVector = midpoint.multiplyScalar(scalingFactor);
@@ -170,7 +167,7 @@ function main() {
   // Refine icosahedron.
   let level = 0;
   for (let i = 0; i < level; i++) {
-    poly = refineIcosahedron(poly);
+    poly = refinePolyhedron(poly);
   }
 
   // Add polyhedron to the scene.
