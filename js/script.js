@@ -12,7 +12,10 @@ function generateIcosahedron() {
   // Calculate the golden ratio.
   let p = (1.0 + Math.sqrt(5.0)) / 2.0;
 
+  // A regular icosahedron can be generated via three orthogonal rectangles
+  // where the side lengths of each rectangle conform to the golden ratio.
   let vertices = [
+    // Rectangle 1
     new THREE.Vector3( 0,  p, -1), // 0
     new THREE.Vector3( 0,  p,  1), // 1
     new THREE.Vector3( 0, -p,  1), // 2
@@ -158,7 +161,7 @@ function main() {
   renderer.setSize(window.innerWidth / 2, window.innerHeight / 2);
   document.body.appendChild(renderer.domElement);
 
-  // Create polyhedral object.
+  // Create polyhedron.
   let poly = generateIcosahedron();
 
   // Move camera to avoid coinciding with the object.
