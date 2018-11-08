@@ -140,6 +140,19 @@ function addMidpointToMesh(v1, v2, mesh, circumRadius = 1.0) {
   return newIndex;
 }
 
+function projectedVertices(mesh, circumRadius = 1.0) {
+  let vertices = mesh.geometry.vertices;
+  let projectedVertices = [];
+
+  let verticesCount = vertices.length;
+  for (let i = 0; i < verticesCount; i++) {
+    let scalingFactor = circumRadius / vertices[i].length();
+    projectedVertices.push(vertices[i].multiplyScalar(scalingFactor));
+  }
+
+  return projectedVertices;
+}
+
 function main() {
   // Initialize scene.
   let scene = new THREE.Scene();
@@ -160,6 +173,8 @@ function main() {
 
   // Create polyhedron.
   let poly = generateIcosahedron();
+  // Scale polyhedron to fit within a unit circumscribed sphere.
+  poly.vertices = projectedVertices(poly);
 
   // Move camera to avoid coinciding with the object.
   camera.position.z = 4;
