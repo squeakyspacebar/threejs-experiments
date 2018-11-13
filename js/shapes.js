@@ -96,63 +96,78 @@ ConvexDeltahedron.prototype.getMidpoint = function(v1, v2) {
   );
 }
 
-function PolyhedronFactory() {
-  this.icosahedron = function(materialConfiguration) {
-    // Calculate the golden ratio.
-    let p = (1.0 + Math.sqrt(5.0)) / 2.0;
+ConvexDeltahedron.prototype.projectVertices = function(circumRadius = 1.0) {
+  let self = this;
 
-    // A regular icosahedron can be generated via three orthogonal rectangles
-    // where the side lengths of each rectangle conform to the golden ratio.
-    let vertices = [
-      // Rectangle 1
-      new THREE.Vector3( 0,  p, -1), // 0
-      new THREE.Vector3( 0,  p,  1), // 1
-      new THREE.Vector3( 0, -p,  1), // 2
-      new THREE.Vector3( 0, -p, -1), // 3
-      // Rectangle 2
-      new THREE.Vector3(-p,  1,  0), // 4
-      new THREE.Vector3( p,  1,  0), // 5
-      new THREE.Vector3( p, -1,  0), // 6
-      new THREE.Vector3(-p, -1,  0), // 7
-      // Rectangle 3
-      new THREE.Vector3(-1,  0, -p), // 8
-      new THREE.Vector3(-1,  0,  p), // 9
-      new THREE.Vector3( 1,  0,  p), // 10
-      new THREE.Vector3( 1,  0, -p), // 11
-    ];
+  let vertices = self.mesh.geometry.vertices;
+  let projectedVertices = [];
 
-    let faces = [
-      // Faces centered around vertex 0.
-      new THREE.Face3( 4,  1,  0),
-      new THREE.Face3( 8,  4,  0),
-      new THREE.Face3(11,  8, 0),
-      new THREE.Face3( 5, 11,  0),
-      new THREE.Face3( 1,  5,  0),
-      // Adjacent faces.
-      new THREE.Face3( 4,  9,  1),
-      new THREE.Face3( 8,  7,  4),
-      new THREE.Face3(11,  3,  8),
-      new THREE.Face3( 5,  6, 11),
-      new THREE.Face3( 1, 10,  5),
-      // Faces centered around vertex 2.
-      new THREE.Face3( 3,  6,  2),
-      new THREE.Face3( 7,  3,  2),
-      new THREE.Face3( 9,  7,  2),
-      new THREE.Face3(10,  9,  2),
-      new THREE.Face3( 6, 10,  2),
-      // Adjacent faces.
-      new THREE.Face3( 3, 11,  6),
-      new THREE.Face3( 7,  8,  3),
-      new THREE.Face3( 9,  4,  7),
-      new THREE.Face3(10,  1,  9),
-      new THREE.Face3( 6,  5, 10),
-    ];
-
-    let material = new THREE.MeshBasicMaterial(materialConfiguration);
-    let polyhedron = new ConvexDeltahedron(vertices, faces, material);
-
-    return polyhedron;
+  let verticesCount = vertices.length;
+  for (let i = 0; i < verticesCount; i++) {
+    let scalingFactor = circumRadius / vertices[i].length();
+    projectedVertices.push(vertices[i].multiplyScalar(scalingFactor));
   }
+
+  self.vertices = projectedVertices;
+}
+
+function PolyhedronFactory() {}
+
+PolyhedronFactory.prototype.icosahedron = function(materialConfiguration) {
+  // Calculate the golden ratio.
+  let p = (1.0 + Math.sqrt(5.0)) / 2.0;
+
+  // A regular icosahedron can be generated via three orthogonal rectangles
+  // where the side lengths of each rectangle conform to the golden ratio.
+  let vertices = [
+    // Rectangle 1
+    new THREE.Vector3( 0,  p, -1), // 0
+    new THREE.Vector3( 0,  p,  1), // 1
+    new THREE.Vector3( 0, -p,  1), // 2
+    new THREE.Vector3( 0, -p, -1), // 3
+    // Rectangle 2
+    new THREE.Vector3(-p,  1,  0), // 4
+    new THREE.Vector3( p,  1,  0), // 5
+    new THREE.Vector3( p, -1,  0), // 6
+    new THREE.Vector3(-p, -1,  0), // 7
+    // Rectangle 3
+    new THREE.Vector3(-1,  0, -p), // 8
+    new THREE.Vector3(-1,  0,  p), // 9
+    new THREE.Vector3( 1,  0,  p), // 10
+    new THREE.Vector3( 1,  0, -p), // 11
+  ];
+
+  let faces = [
+    // Faces centered around vertex 0.
+    new THREE.Face3( 4,  1,  0),
+    new THREE.Face3( 8,  4,  0),
+    new THREE.Face3(11,  8, 0),
+    new THREE.Face3( 5, 11,  0),
+    new THREE.Face3( 1,  5,  0),
+    // Adjacent faces.
+    new THREE.Face3( 4,  9,  1),
+    new THREE.Face3( 8,  7,  4),
+    new THREE.Face3(11,  3,  8),
+    new THREE.Face3( 5,  6, 11),
+    new THREE.Face3( 1, 10,  5),
+    // Faces centered around vertex 2.
+    new THREE.Face3( 3,  6,  2),
+    new THREE.Face3( 7,  3,  2),
+    new THREE.Face3( 9,  7,  2),
+    new THREE.Face3(10,  9,  2),
+    new THREE.Face3( 6, 10,  2),
+    // Adjacent faces.
+    new THREE.Face3( 3, 11,  6),
+    new THREE.Face3( 7,  8,  3),
+    new THREE.Face3( 9,  4,  7),
+    new THREE.Face3(10,  1,  9),
+    new THREE.Face3( 6,  5, 10),
+  ];
+
+  let material = new THREE.MeshBasicMaterial(materialConfiguration);
+  let polyhedron = new ConvexDeltahedron(vertices, faces, material);
+
+  return polyhedron;
 }
 
 module.exports = {
