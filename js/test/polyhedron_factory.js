@@ -2,11 +2,11 @@
 
 let assert = require('chai').assert;
 let THREE = require('three');
-let pf = require('../shapes');
+let shapes = require('../shapes');
 
 describe('PolyhedronFactory', function() {
   before(function() {
-    this.factory = new pf.PolyhedronFactory();
+    this.factory = new shapes.PolyhedronFactory();
   });
 
   describe('icosahedron', function() {

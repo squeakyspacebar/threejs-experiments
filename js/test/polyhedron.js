@@ -2,7 +2,7 @@
 
 let assert = require('chai').assert;
 let THREE = require('three');
-let pf = require('../shapes');
+let shapes = require('../shapes');
 
 describe('Polyhedron', function() {
   before(function() {
@@ -20,7 +20,7 @@ describe('Polyhedron', function() {
       new THREE.Face3(0, 1, 2),
     ];
 
-    this.polyhedron = new pf.Polyhedron(vertices, faces, {});
+    this.polyhedron = new shapes.Polyhedron(vertices, faces, {});
   });
 
   it('should store mesh data', function() {
@@ -36,7 +36,7 @@ describe('Polyhedron', function() {
   });
   describe('constructor', function() {
     it('should return a Polyhedron object', function() {
-      assert.isTrue(this.polyhedron instanceof pf.Polyhedron);
+      assert.isTrue(this.polyhedron instanceof shapes.Polyhedron);
     });
   });
 });

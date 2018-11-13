@@ -2,7 +2,7 @@
 
 let assert = require('chai').assert;
 let THREE = require('three');
-let pf = require('../shapes');
+let shapes = require('../shapes');
 
 describe('ConvexDeltahedron', function() {
   beforeEach(function() {
@@ -22,7 +22,7 @@ describe('ConvexDeltahedron', function() {
 
     const material = new THREE.MeshBasicMaterial({});
 
-    this.polyhedron = new pf.ConvexDeltahedron(vertices, faces, material);
+    this.polyhedron = new shapes.ConvexDeltahedron(vertices, faces, material);
   });
 
   it('should contain faces all made of equilateral triangles', function() {
