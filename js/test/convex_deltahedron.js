@@ -120,4 +120,20 @@ describe('ConvexDeltahedron', function() {
       assert.equal(midpoint1.z, midpoint2.z);
     });
   });
+  describe('projectVertices', function() {
+    it('should project each vertex onto a circumscribed sphere of the given ' +
+      'radius',
+      function() {
+        const radius = 2.0;
+
+        this.polyhedron.projectVertices(radius);
+
+        let vertices = this.polyhedron.mesh.geometry.vertices.length;
+
+        const verticesCount = vertices.length;
+        for(let i = 0; i < verticesCount; i++) {
+          assert.equal(radius, vertices[i].length());
+        }
+      })
+  });
 });
