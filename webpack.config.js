@@ -1,8 +1,7 @@
-const glob = require("glob");
 const path = require("path");
 const BundleAnalyzerPlugin =
   require("webpack-bundle-analyzer").BundleAnalyzerPlugin;
-const CopyWebpackPlugin = require("copy-webpack-plugin");
+const CopyPlugin = require("copy-webpack-plugin");
 const UglifyJsPlugin = require("uglifyjs-webpack-plugin");
 const entryPlus = require("webpack-entry-plus");
 
@@ -13,7 +12,7 @@ function defaultFilename(filename) {
 // Define entry points here (to be processed through webpack-entry-plus).
 const entryFiles = [
   {
-    entryFiles: ["./js/src/script.js"],
+    entryFiles: ["./src/js/script.js"],
     outputName: defaultFilename,
   },
 ];
@@ -23,8 +22,9 @@ module.exports = [
     mode: "development",
     entry: entryPlus(entryFiles),
     output: {
-      filename: "[name].js",
+      filename: "[name].bundle.js",
       path: path.resolve(__dirname, "./dist/js"),
+      clean: true,
     },
     module: {
       rules: [
@@ -49,22 +49,33 @@ module.exports = [
       },
       minimize: false,
     },
+    devtool: "source-map",
     plugins: [
       new BundleAnalyzerPlugin({ analyzerMode: "disable" }),
-      new CopyWebpackPlugin([
-        {
-          from: path.join(__dirname, "*.html"),
-          to: path.join(__dirname, "dist/"),
-        },
-        {
-          from: path.join(__dirname, "css/*.css"),
-          to: path.join(__dirname, "dist/"),
-        },
-      ]),
-      new UglifyJsPlugin({ test: /\.js$/ }),
+      new CopyPlugin({
+        patterns: [
+          {
+            from: path.join(__dirname, "src", "*.html"),
+            to: path.join(__dirname, "dist/"),
+            context: "src/",
+          },
+          {
+            from: path.join(__dirname, "src", "css/*.css"),
+            to: path.join(__dirname, "dist/"),
+            context: "src/",
+          },
+          {
+            from: path.join(__dirname, "src", "assets/**/*"),
+            to: path.join(__dirname, "dist/"),
+            context: "src/",
+          },
+        ],
+      }),
+      new UglifyJsPlugin({ sourceMap: true, test: /\.js$/ }),
     ],
     resolve: {
-      modules: [path.resolve("./js/src"), path.resolve("./node_modules")],
+      extensions: [".js"],
+      modules: [path.resolve("./src/js"), path.resolve("./node_modules")],
     },
   },
 ];
