@@ -1,6 +1,9 @@
 {
   "scripts": {
-    "test": "./node_modules/mocha/bin/mocha --recursive ./js/test --reporter tap"
+    "format": "prettier -w ./js",
+    "lint": "prettier -c ./js",
+    "test": "./node_modules/mocha/bin/mocha --recursive ./js/test --reporter tap",
+    "build": "webpack"
   },
   "devDependencies": {
     "@babel/core": "^7.0.0",
@@ -9,6 +12,7 @@
     "chai": "^4.2.0",
     "copy-webpack-plugin": "^4.6.0",
     "mocha": "^5.2.0",
+    "prettier": "^2.8.8",
     "uglifyjs-webpack-plugin": "^1.3.0",
     "webpack": "^4.25.1",
     "webpack-bundle-analyzer": "^3.0.3",
