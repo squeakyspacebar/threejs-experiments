@@ -1,38 +1,37 @@
 const glob = require("glob");
-const path = require('path');
-const BundleAnalyzerPlugin = require('webpack-bundle-analyzer')
-  .BundleAnalyzerPlugin;
-const CopyWebpackPlugin = require('copy-webpack-plugin');
-const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
-const entryPlus = require('webpack-entry-plus');
+const path = require("path");
+const BundleAnalyzerPlugin =
+  require("webpack-bundle-analyzer").BundleAnalyzerPlugin;
+const CopyWebpackPlugin = require("copy-webpack-plugin");
+const UglifyJsPlugin = require("uglifyjs-webpack-plugin");
+const entryPlus = require("webpack-entry-plus");
 
-function defaultFilename (filename) {
-  return filename.split('/').pop().replace(/\.js$/, '');
+function defaultFilename(filename) {
+  return filename.split("/").pop().replace(/\.js$/, "");
 }
 
 // Define entry points here (to be processed through webpack-entry-plus).
 const entryFiles = [
   {
-    entryFiles: [
-      './js/script.js',
-    ],
+    entryFiles: ["./js/src/script.js"],
     outputName: defaultFilename,
   },
 ];
 
 module.exports = [
   {
+    mode: "development",
     entry: entryPlus(entryFiles),
     output: {
-      filename: '[name].js',
-      path: path.resolve(__dirname, './dist/js'),
+      filename: "[name].js",
+      path: path.resolve(__dirname, "./dist/js"),
     },
     module: {
       rules: [
         {
           test: /\.js$/,
           use: {
-            loader: 'babel-loader',
+            loader: "babel-loader",
           },
           exclude: /(node_modules)/,
         },
@@ -43,31 +42,29 @@ module.exports = [
         cacheGroups: {
           vendors: {
             test: /[\\/]node_modules[\\/]/,
-            name: 'vendor',
-            chunks: 'initial',
+            name: "vendor",
+            chunks: "initial",
           },
         },
-      }
+      },
+      minimize: false,
     },
     plugins: [
-      new BundleAnalyzerPlugin({ analyzerMode: 'disable' }),
+      new BundleAnalyzerPlugin({ analyzerMode: "disable" }),
       new CopyWebpackPlugin([
         {
-          from: path.join(__dirname, '*.html'),
-          to: path.join(__dirname, 'dist/'),
+          from: path.join(__dirname, "*.html"),
+          to: path.join(__dirname, "dist/"),
         },
         {
-          from: path.join(__dirname, 'css/*.css'),
-          to: path.join(__dirname, 'dist/'),
+          from: path.join(__dirname, "css/*.css"),
+          to: path.join(__dirname, "dist/"),
         },
       ]),
       new UglifyJsPlugin({ test: /\.js$/ }),
     ],
     resolve: {
-      modules: [
-        path.resolve('./js'),
-        path.resolve('./node_modules'),
-      ]
-    }
+      modules: [path.resolve("./js/src"), path.resolve("./node_modules")],
+    },
   },
 ];

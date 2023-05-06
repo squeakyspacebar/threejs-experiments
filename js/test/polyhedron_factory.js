@@ -1,17 +1,16 @@
-'use strict';
+"use strict";
 
-let assert = require('chai').assert;
-let THREE = require('three');
-let shapes = require('../shapes');
+const assert = require("chai").assert;
+const shapes = require("../shapes");
 
-describe('PolyhedronFactory', function() {
-  before(function() {
+describe("PolyhedronFactory", function () {
+  before(function () {
     this.factory = new shapes.PolyhedronFactory();
   });
 
-  describe('icosahedron', function() {
-    it('should generate an icosahedron', function() {
-      let polyhedron = this.factory.icosahedron();
+  describe("icosahedron", function () {
+    it("should generate an icosahedron", function () {
+      const polyhedron = this.factory.icosahedron();
 
       const verticesCount = polyhedron.mesh.geometry.vertices.length;
       const facesCount = polyhedron.mesh.geometry.faces.length;
